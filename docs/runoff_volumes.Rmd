@@ -1,0 +1,33 @@
+---
+title: "Runoff Volumes"
+author: "Grace Lewin"
+date: "8/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+
+source(here("src", "storm_runoff.R"))
+```
+
+```{r}
+Ia <- seq(from = 0.6, to = 0.8, by = 0.01)
+
+runoff <- predict_runoff(Ia = Ia,
+                         A = 182)
+
+df_runoff <- data.frame(Ia, runoff)
+
+runoff_plot <- ggplot(data = df_runoff, aes(x = Ia, y = runoff)) +
+  geom_point(color = "orange") +
+  geom_line(color = "pink") +
+  labs(title = "Predicted Stormwater Runoff",
+       x = "Impervious fraction",
+       y = "Predicted Runoff (cubic feet)")
+
+ggsave(here::here("figs", "runoff_plot.png"), plot = runoff_plot, height = 6, width = 8)
+```
+
